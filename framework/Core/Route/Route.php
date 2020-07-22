@@ -17,7 +17,7 @@ class Route
     public static function addRoute($method,$routeInfo)
     {
         self::$routes[$method][] = $routeInfo;
-        
+
     }
 
     /**
@@ -41,7 +41,7 @@ class Route
             }
             case "POST":
             {
-
+				
             }
         }
     }
