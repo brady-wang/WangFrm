@@ -62,8 +62,18 @@ class App
         $this->tree(APP_PATH,$dirs,$filter="controller");
         if(!empty($dirs)){
             foreach($dirs as $file){
-                var_dump($file);
-                $obj = new HomeController();
+            	$fileArr = explode("/",$file);
+            	$short_file_name = end($fileArr);
+            	$controller   = explode('.',$short_file_name)[0];
+
+            	$content = file_get_contents($file,false,null,0,500);
+
+            	preg_match('/namespace\s(.*)/i',$content,$nameSpace);
+            	$nameSpace = str_replace([' ',';','"'],'',$nameSpace);
+				$nameSpace = trim($nameSpace[1]);
+				$className = $nameSpace."\\".$controller;
+
+				$obj = new $className;
                 $reflect = new \ReflectionObject($obj);
 
                 //匹配前缀

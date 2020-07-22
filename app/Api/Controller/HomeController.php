@@ -1,11 +1,11 @@
 <?php
 
 
-namespace App\Api\Controller;
+namespace App \Api \Controller;
 
 /**
  * Class HomeController
- * @Controller(prefix="/home")
+ * @Controller(prefix="/api/home")
  */
 class HomeController
 {
