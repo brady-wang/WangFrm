@@ -4,6 +4,8 @@
 namespace Wang\Core;
 
 
+
+use Wang\Core\Log\Helper\CLog;
 use Wang\Core\Route\Annotation\Mapping\RequestMapping;
 use Wang\Core\Route\Annotation\Parser\RequestMappingParser;
 use Wang\Core\Route\Route;
@@ -16,6 +18,16 @@ class App
     public function run()
     {
 
+	   $config =  [
+		    'name'    => 'swoft',
+		    'enable'  => true,
+		    'output'  => true,
+		    'levels'  => '',
+		    'logFile' => ''
+	    ];
+	   CLog::init($config);
+
+    	\Wang\Core\Log\Helper\CLog::info("hello");
     	// 注解路由实现
         $this->loadAnnotations();
 
