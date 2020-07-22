@@ -21,7 +21,7 @@
             "Wang\\": "framework/"
         },
         "files": [
-            "app/Helper/Functions.php"
+            "Helper/Functions.php"
         ]
     }
 }
