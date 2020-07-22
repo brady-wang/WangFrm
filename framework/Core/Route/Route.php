@@ -17,7 +17,6 @@ class Route
     public static function addRoute($method,$routeInfo)
     {
         self::$routes[$method][] = $routeInfo;
-
     }
 
     /**
@@ -27,12 +26,15 @@ class Route
      */
     public static function dispatch($method,$path_info)
     {
+
+	    $path_info = filter_lean_line($path_info);
+
         switch($method){
             case "GET":
             {
                 foreach(self::$routes[$method] as $v){
                     if($path_info == $v['routePath']) {
-                       $handle = explode("@",$v['handle']);
+                        $handle = explode("@",$v['handle']);
                         $class = $handle[0];
                         $method = $handle[1];
                         return (new $class)->$method();
@@ -41,7 +43,7 @@ class Route
             }
             case "POST":
             {
-				
+
             }
         }
     }

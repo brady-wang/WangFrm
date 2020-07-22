@@ -4,7 +4,8 @@
 namespace Wang\Core;
 
 
-use App\Api\Controller\HomeController;
+use Wang\Core\Route\Annotation\Mapping\RequestMapping;
+use Wang\Core\Route\Annotation\Parser\RequestMappingParser;
 use Wang\Core\Route\Route;
 
 class App
@@ -15,7 +16,7 @@ class App
     public function run()
     {
 
-        $this->init();
+    	// 注解路由实现
         $this->loadAnnotations();
 
         $http = new \Swoole\Http\Server("0.0.0.0", $this->http_port);
@@ -50,49 +51,30 @@ class App
 
     }
 
-    public function init()
-    {
-        define("ROOT_PATH",dirname(dirname(__DIR__)));
-        define("APP_PATH",ROOT_PATH."/app");
-    }
 
+	/**
+	 * 获取 apppath的路由 下面所有文件，得到注解路由 放到路由属性$routes 对象里面
+	 */
     public function loadAnnotations()
     {
-        $dirs = [];
-        $this->tree(APP_PATH,$dirs,$filter="controller");
+	    get_files_by_tree(APP_PATH,$dirs,$filter="controller");
+
         if(!empty($dirs)){
             foreach($dirs as $file){
-            	$fileArr = explode("/",$file);
-            	$short_file_name = end($fileArr);
-            	$controller   = explode('.',$short_file_name)[0];
-
-            	$content = file_get_contents($file,false,null,0,500);
-
-            	preg_match('/namespace\s(.*)/i',$content,$nameSpace);
-            	$nameSpace = str_replace([' ',';','"'],'',$nameSpace);
-				$nameSpace = trim($nameSpace[1]);
-				$className = $nameSpace."\\".$controller;
+            	// 根据绝对路径文件名 获取带命名空间的类
+	            $className = getClassNameByFilePath($file);
 
 				$obj = new $className;
                 $reflect = new \ReflectionObject($obj);
-
-                //匹配前缀
-                $classDoc = $reflect->getDocComment();
-                preg_match('/@Controller\((.*)\)/i',$classDoc,$prefix);
-                $prefix = str_replace('"','',explode("=",$prefix[1])[1]);
                 $methods = $reflect->getMethods();
                 if(!empty($methods)){
                     foreach($methods as $method){
-
                         if ($method->getName() !=  '__construct'){
-                            preg_match('/@RequestMapping\((.*)\)/i',$method->getDocComment(),$suffix);
-                            $suffix = str_replace('"','',explode("=",$suffix[1])[1]);
+                        	// 注解对象 设置注解路由相关信息
+	                        $annotation = new RequestMapping($reflect,$method);
 
-                            $routeInfo = [
-                                'routePath' => $prefix."/".$suffix,
-                                'handle'=>$reflect->getName()."@".$method->getName()
-                            ];
-                            Route::addRoute("GET",$routeInfo);
+	                        // 解析 将上一步收集到的信息组装后添加到路由数组里面 $routes
+	                        (new RequestMappingParser())->parse($annotation);
                         }
                     }
                 }
@@ -102,19 +84,4 @@ class App
 
     }
 
-    public function tree($path,&$files=[],$filter="controller"){
-        $dirs = glob($path."/*");
-        if(!empty($dirs)){
-            foreach($dirs as $dir){
-                if(is_dir($dir)){
-                    $this->tree($dir,$files,$filter);
-                } else {
-                    if(stristr(strtolower($dir),$filter)){
-                        $files[] = $dir;
-                    }
-                }
-            }
-        }
-        return $files;
-    }
 }

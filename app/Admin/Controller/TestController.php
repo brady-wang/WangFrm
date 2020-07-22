@@ -20,7 +20,7 @@ class TestController
      */
     public function index()
     {
-        return "你好";
+        return "test";
     }
 
     /**

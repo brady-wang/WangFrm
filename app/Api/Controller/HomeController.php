@@ -15,12 +15,12 @@ class HomeController
     }
 
     /**
-     * @RequestMapping(route="index")
+     * @RequestMapping()
      *
      */
     public function index()
     {
-        return "你好";
+        return "sdfsdf";
     }
 
     /**
