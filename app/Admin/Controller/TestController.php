@@ -20,7 +20,7 @@ class TestController
      */
     public function index()
     {
-        return "test";
+        return "admin/test/indexd";
     }
 
     /**
@@ -29,6 +29,6 @@ class TestController
      */
     public function hello()
     {
-        return  "hello";
+        return "hello";
     }
 }

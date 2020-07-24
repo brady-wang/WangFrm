@@ -23,7 +23,7 @@
             "Wang\\": "framework/"
         },
         "files": [
-            "Helper/Functions.php"
+            "app/Helper/Functions.php"
         ]
     }
 }

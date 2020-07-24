@@ -1,17 +1,21 @@
 <?php
 
-// 根据文件的绝对路径，获取下面的所有路径带有controller的文件数组
+// 根据文件的绝对路径，获取下面的所有路径带有$filter的文件数组
 if(!function_exists("get_files_by_tree")){
-	function get_files_by_tree($path,&$files=[],$filter="controller"){
-		$dirs = glob($path."/*");
+	function get_files_by_tree($path,&$files=[],$filter=""){
+        $dirs = glob($path."/*");
 		if(!empty($dirs)){
 			foreach($dirs as $dir){
 				if(is_dir($dir)){
 					get_files_by_tree($dir,$files,$filter);
 				} else {
-					if(stristr(strtolower($dir),$filter)){
-						$files[] = $dir;
-					}
+                    if(!empty($filter)){
+                        if(stristr(strtolower($dir),$filter)){
+                            $files[] = $dir;
+                        }
+                    } else {
+                        $files[] = $dir;
+                    }
 				}
 			}
 		}
@@ -44,4 +48,19 @@ function getClassNameByFilePath($file)
 	$nameSpace = trim($nameSpace[1]);
 	return $className = $nameSpace."\\".$controller;
 
+}
+
+/**
+ * @param string $name
+ * @return \Wang\Core\Bean\BeanFactory
+ * author: brady
+ * date: 2020/7/23 9:15
+ */
+function bean($name = '')
+{
+	if(!empty($name)){
+		return \Wang\Core\Bean\BeanFactory::make($name);
+	} else {
+		return \Wang\Core\Bean\BeanFactory::getInstance();
+	}
 }

@@ -14,7 +14,7 @@ class Route
      * author: brady
      * date: 2020/7/22 18:10
      */
-    public static function addRoute($method,$routeInfo)
+    public static function addRoute($method, $routeInfo)
     {
         self::$routes[$method][] = $routeInfo;
     }
@@ -24,26 +24,25 @@ class Route
      * author: brady
      * date: 2020/7/22 18:10
      */
-    public static function dispatch($method,$path_info)
+    public static function dispatch($method, $path_info)
     {
 
-	    $path_info = filter_lean_line($path_info);
 
-        switch($method){
-            case "GET":
-            {
-                foreach(self::$routes[$method] as $v){
-                    if($path_info == $v['routePath']) {
-                        $handle = explode("@",$v['handle']);
+        $path_info = filter_lean_line($path_info);
+
+        switch ($method) {
+            case "GET": {
+                foreach (self::$routes[$method] as $v) {
+                    if ($path_info == $v['routePath']) {
+                        $handle = explode("@", $v['handle']);
                         $class = $handle[0];
                         $method = $handle[1];
                         return (new $class)->$method();
                     }
                 }
             }
-            case "POST":
-            {
-
+            case "POST": {
+                // todo
             }
         }
     }

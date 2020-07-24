@@ -2,6 +2,7 @@
 
 namespace Wang\Core\Route\Annotation\Parser;
 
+use Wang\Core\Bean\BeanFactory;
 use Wang\Core\Route\Annotation\Mapping\RequestMapping;
 use Wang\Core\Route\Route;
 
@@ -13,18 +14,18 @@ use Wang\Core\Route\Route;
 class RequestMappingParser
 {
 
-	/**
-	 * @param RequestMapping $annotation
-	 */
+    /**
+     * @param RequestMapping $annotation
+     */
     public function parse($annotation)
     {
 
-	    $routeInfo = [
-		    'routePath' => $annotation->getRoutePath(),
-		    'handle'=>$annotation->getHandle(),
-		    'method'=>$annotation->getMethod()
-	    ];
+        $routeInfo = [
+            'routePath' => $annotation->getRoutePath(),
+            'handle' => $annotation->getHandle(),
+            'method' => $annotation->getMethod()
+        ];
 
-	    Route::addRoute("GET",$routeInfo);
+        bean("route")->addRoute("GET", $routeInfo);
     }
 }
